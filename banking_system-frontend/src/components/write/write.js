@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 import { Button } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Swal from "sweetalert2";
+import axios from "axios";
 import SideNavBar from "../sidenav/sidenav";
 
 const MainReadContainer = styled(Box)`
@@ -70,13 +71,13 @@ function Write() {
 
   //creating the one state for the user
   const [user, setUser] = useState({
-    username: "",
-    accountnumber: "",
-    bankname: "",
-    address: "",
-    city: "",
-    country: "",
-    zip: "",
+    username: "vivek",
+    accountnumber: "38479840938509284",
+    bankname: "SBI",
+    address: "the is the address",
+    city: "bangalore",
+    country: "india",
+    zip: "987876",
   });
 
   const handleInput = (e) => {
@@ -103,9 +104,18 @@ function Write() {
   };
 
   const handleSubmit = (e) => {
-    console.log(e);
-    console.log(user);
     sweetalert();
+
+    axios
+      .post("http://localhost:4000/user/create_account", {
+        user:user
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (

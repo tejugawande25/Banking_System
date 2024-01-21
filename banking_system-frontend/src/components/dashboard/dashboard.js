@@ -11,6 +11,8 @@ import Modal from "@mui/material/Modal";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import SideNavBar from "../sidenav/sidenav";
+import axios from "axios";
+import { useEffect } from "react";
 
 const MainDashboard = styled(Box)`
 height:685px;
@@ -25,7 +27,7 @@ const RightDiv = styled(Box)`
   flex-direction: column;
 `;
 const MainDiv = styled(Box)`
-  height: 700px;
+  height: 100%;
   width: 100%;
 `;
 const InsideDiv = styled(Box)`
@@ -177,8 +179,37 @@ const Update = styled(Box)`
 
 function Dashboard() {
   const [open, setOpen] = useState(false);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    getAllUsers();
+  }, []);
+
+  const getAllUsers = () =>{
+    axios
+    .get("http://localhost:4000/user/display_account")
+    .then((users) => setUsers(users.data), console.log(users))
+    .catch((err) => console.log(err));
+  }
+
+  console.log(users);
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const deleteUser = (id, username) => {
+    if (window.confirm(`Are you sure you want to delete ${username}`)) {
+      axios
+        .post("http://localhost:4000/user/delete_account",{
+            userid: id,
+          })
+        .then((data) =>{
+          getAllUsers()
+          console.log(data) 
+        })
+        .catch((err) => console.log(err));
+    } else {
+    }
   };
 
   return (
@@ -245,35 +276,32 @@ function Dashboard() {
                 <Div>Zip Code</Div>
                 <Div></Div>
               </SubHeadingDiv>
-              <InformationDiv>
-                <InfoDiv>Tejas Gawande</InfoDiv>
-                <InfoDiv>603675582397</InfoDiv>
-                <InfoDiv>Maharastra</InfoDiv>
-                <InfoDiv>BTM Layout</InfoDiv>
-                <InfoDiv>Banglore</InfoDiv>
-                <InfoDiv>India</InfoDiv>
-                <InfoDiv>557604</InfoDiv>
+              {users.map((user) => {
+                return (
+                  <InformationDiv>
+                    <InfoDiv>{user.username}</InfoDiv>
+                    <InfoDiv>{user.accountnumber}</InfoDiv>
+                    <InfoDiv>{user.bankname}</InfoDiv>
+                    <InfoDiv>{user.address}</InfoDiv>
+                    <InfoDiv>{user.city}</InfoDiv>
+                    <InfoDiv>{user.country}</InfoDiv>
+                    <InfoDiv>{user.zip}</InfoDiv>
 
-                <InfoDiv style={{ display: "flex", gap: "20px" }}>
-                  <EditIcon
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setOpen(!open);
-                    }}
-                  ></EditIcon>
-                  <MyDeleteIcon style={{ cursor: "pointer" }}></MyDeleteIcon>
-                </InfoDiv>
-              </InformationDiv>
-              <InformationDiv style={{ background: "#D1E5F4" }}>
-                <InfoDiv></InfoDiv>
-                <InfoDiv></InfoDiv>
-                <InfoDiv></InfoDiv>
-                <InfoDiv></InfoDiv>
-                <InfoDiv></InfoDiv>
-                <InfoDiv></InfoDiv>
-                <InfoDiv></InfoDiv>
-                <InfoDiv></InfoDiv>
-              </InformationDiv>
+                    <InfoDiv style={{ display: "flex", gap: "20px" }}>
+                      <EditIcon
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          setOpen(!open);
+                        }}
+                      ></EditIcon>
+                      <MyDeleteIcon
+                        style={{ cursor: "pointer" }}
+                        onClick={() => deleteUser(user._id, user.username)}
+                      ></MyDeleteIcon>
+                    </InfoDiv>
+                  </InformationDiv>
+                );
+              })}
             </InsideDiv>
           </MainDiv>
         </RightDiv>
@@ -289,6 +317,11 @@ function Dashboard() {
                 id="outlined-basic"
                 label="Vender Name"
                 variant="outlined"
+                inputProps={{
+                  style: {
+                    height: 12,
+                  },
+                }}
                 style={{ width: "80%" }}
                 required
               />
