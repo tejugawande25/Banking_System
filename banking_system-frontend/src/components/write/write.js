@@ -71,13 +71,13 @@ function Write() {
 
   //creating the one state for the user
   const [user, setUser] = useState({
-    username: "vivek",
-    accountnumber: "38479840938509284",
-    bankname: "SBI",
-    address: "the is the address",
-    city: "bangalore",
-    country: "india",
-    zip: "987876",
+    username: "",
+    accountnumber: "",
+    bankname: "",
+    address: "",
+    city: "",
+    country: "",
+    zip: "",
   });
 
   const handleInput = (e) => {

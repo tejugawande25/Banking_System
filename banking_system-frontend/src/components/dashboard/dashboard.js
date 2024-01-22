@@ -196,7 +196,7 @@ function Dashboard() {
   const handleClose = () => {
     setOpen(false);
   };
-
+  
   const deleteUser = (id, username) => {
     if (window.confirm(`Are you sure you want to delete ${username}`)) {
       axios
@@ -211,7 +211,7 @@ function Dashboard() {
     } else {
     }
   };
-
+  
   return (
     <>
       <MainDashboard>
