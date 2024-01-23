@@ -10,7 +10,7 @@ import styled from "@emotion/styled";
 
 
 const SideNav = styled(Box)`
-  height: 100%;
+  height: 102%;
   width: 90px;
   background: #6699cc;
   display: flex;

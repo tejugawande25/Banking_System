@@ -103,9 +103,21 @@ function Write() {
     });
   };
 
+  const handleClear =() =>{
+    setUser({
+      username:"",
+      accountnumber:"",
+      bankname:"",
+      address:"",
+      city:"",
+      country:"",
+      zip:"",
+    })
+  }
+
   const handleSubmit = (e) => {
     sweetalert();
-
+    handleClear();
     axios
       .post("http://localhost:4000/user/create_account", {
         user:user
@@ -252,16 +264,7 @@ function Write() {
                   fontFamily: "Times New Roman",
                   fontSize: "16px",
                 }}
-                // onClick={() =>{
-                //     // Swal.fire({
-                //     //     position: "top-end",
-                //     //     icon: "success",
-                //     //     title: "Your account has been created!",
-                //     //     showConfirmButton: false,
-                //     //     timer: 1500
-                //     //   });
-
-                // }}
+               
                 onClick={handleSubmit}
               >
                 Create Account

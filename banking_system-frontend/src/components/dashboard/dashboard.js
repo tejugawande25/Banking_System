@@ -13,6 +13,10 @@ import Swal from "sweetalert2";
 import SideNavBar from "../sidenav/sidenav";
 import axios from "axios";
 import { useEffect } from "react";
+import { useRef } from "react";
+import ReactPaginate from "react-paginate";
+import { useNavigate } from "react-router-dom";
+
 
 const MainDashboard = styled(Box)`
 height:685px;
@@ -33,7 +37,9 @@ const MainDiv = styled(Box)`
 const InsideDiv = styled(Box)`
   height: 86%;
   width: 94%;
-  margin: 45px;
+  margin-top: 33px;
+  margin-bottom:10px;
+  margin-left:45px;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
   display: flex;
@@ -111,7 +117,7 @@ const MyDeleteIcon = styled(DeleteIcon)``;
 const InputTextField = styled(TextField)`
   width: 80%;
   font-size: 15px;
-  background: #f7f8fc;
+  background: white;
   color: black;
   padding: 0px;
   & .MuiOutlinedInput-notchedOutline {
@@ -176,43 +182,85 @@ const Update = styled(Box)`
   font-family: Inter sans-serif;
   color: #404040;
 `;
+//is the div for pagination
+const LastDiv = styled(Box)`
+  height: 10%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+`;
+
+const PaginateDiv = styled(Box)`
+  margin-left: 50px;
+`;
 
 function Dashboard() {
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState({});
+  const [query, setQuery] = useState("");
+  const [foundUser, setFoundUser] = useState([]);
+  const [pageCount, setPageCount] = useState(4);
+  const [limit, setLimit] = useState(6);
+  const currentPage = useRef();
 
-  useEffect(() => {
-    getAllUsers();
-  }, []);
+  console.log("foundUser", foundUser);
 
-  const getAllUsers = () =>{
-    axios
-    .get("http://localhost:4000/user/display_account")
-    .then((users) => setUsers(users.data), console.log(users))
-    .catch((err) => console.log(err));
-  }
-
-  console.log(users);
   const handleClose = () => {
     setOpen(false);
   };
-  
+
+  useEffect(() => {
+    currentPage.current = 1;
+    paginatedUsers();
+  }, []);
+
   const deleteUser = (id, username) => {
     if (window.confirm(`Are you sure you want to delete ${username}`)) {
       axios
-        .post("http://localhost:4000/user/delete_account",{
-            userid: id,
-          })
-        .then((data) =>{
-          getAllUsers()
-          console.log(data) 
+        .post("http://localhost:4000/user/delete_account", {
+          userid: id,
+        })
+        .then((data) => {
+          const updateUserAfterDelete = users.filter((user) => user._id !== id);
+          setUsers(updateUserAfterDelete);
         })
         .catch((err) => console.log(err));
     } else {
     }
   };
+
+  //here is pagination
+  const handlePageClick = (e) => {
+    console.log(e);
+    currentPage.current = e.selected + 1;
+    paginatedUsers();
+  };
+
+  const changeLimit = () => {
+    paginatedUsers();
+  };
+
+  const paginatedUsers = () => {
+    axios
+      .get(
+        `http://localhost:4000/user/paginated?page=${currentPage.current}&limit=${limit}`
+      )
+      .then((users) => {
+        console.log(users);
+        setPageCount(users.data.pageCount);
+        setUsers(users.data.result);
+      })
+      .catch((err) => console.log(err));
+  };
   
+  const Navigate  = useNavigate();
+  const handleLogout = () =>{
+    Navigate("/login");
+  }
+
   return (
+    
     <>
       <MainDashboard>
         <SideNavBar />
@@ -233,6 +281,7 @@ function Dashboard() {
                         fontFamily: "Times New Roman",
                         fontSize: "16px",
                       }}
+                      onClick={handleLogout}
                     >
                       Logout
                     </Button>
@@ -243,6 +292,27 @@ function Dashboard() {
                 <SearchInnerDiv>
                   <MySearchIcon></MySearchIcon>
                   <InputTextField
+                    value={query}
+                    onChange={(e) => {
+                      setQuery(e.target.value);
+                      if (e.target.value === "") {
+                        setFoundUser([]);
+                        return;
+                      }
+                      const findUser = users.find((user) => {
+                        if (
+                          user.username
+                            .toLowerCase()
+                            .includes(e.target.value.toLowerCase())
+                        ) {
+                          return user;
+                        } else {
+                          //here we have to do something...
+                        }
+                      });
+
+                     setFoundUser([findUser??{}]);
+                    }}
                     inputProps={{
                       style: {
                         paddingTop: 12,
@@ -276,33 +346,85 @@ function Dashboard() {
                 <Div>Zip Code</Div>
                 <Div></Div>
               </SubHeadingDiv>
-              {users.map((user) => {
-                return (
-                  <InformationDiv>
-                    <InfoDiv>{user.username}</InfoDiv>
-                    <InfoDiv>{user.accountnumber}</InfoDiv>
-                    <InfoDiv>{user.bankname}</InfoDiv>
-                    <InfoDiv>{user.address}</InfoDiv>
-                    <InfoDiv>{user.city}</InfoDiv>
-                    <InfoDiv>{user.country}</InfoDiv>
-                    <InfoDiv>{user.zip}</InfoDiv>
+              {(foundUser && foundUser.length > 0 ? foundUser : users).map(
+                (user) => {
+                  return (
+                    <InformationDiv>
+                      <InfoDiv>{user.username}</InfoDiv>
+                      <InfoDiv>{user.accountnumber}</InfoDiv>
+                      <InfoDiv>{user.bankname}</InfoDiv>
+                      <InfoDiv>{user.address}</InfoDiv>
+                      <InfoDiv>{user.city}</InfoDiv>
+                      <InfoDiv>{user.country}</InfoDiv>
+                      <InfoDiv>{user.zip}</InfoDiv>
 
-                    <InfoDiv style={{ display: "flex", gap: "20px" }}>
-                      <EditIcon
-                        style={{ cursor: "pointer" }}
-                        onClick={() => {
-                          setOpen(!open);
-                        }}
-                      ></EditIcon>
-                      <MyDeleteIcon
-                        style={{ cursor: "pointer" }}
-                        onClick={() => deleteUser(user._id, user.username)}
-                      ></MyDeleteIcon>
-                    </InfoDiv>
-                  </InformationDiv>
-                );
-              })}
+                      <InfoDiv style={{ display: "flex", gap: "20px" }}>
+                        <EditIcon
+                          style={{ cursor: "pointer" }}
+                          onClick={() => {
+                            setOpen(!open);
+                            setSelectedUser(user);
+                          }}
+                        ></EditIcon>
+                        <MyDeleteIcon
+                          style={{ cursor: "pointer" }}
+                          onClick={() => deleteUser(user._id, user.username)}
+                        ></MyDeleteIcon>
+                      </InfoDiv>
+                    </InformationDiv>
+                  );
+                }
+              )}
             </InsideDiv>
+            <LastDiv>
+                <PaginateDiv>
+                  <ReactPaginate
+                    previousLabel="< previous"
+                    nextLabel="next >"
+                    breakLabel="..."
+                    breakClassName="page-item"
+                    breakLinkClassName="page-link"
+                    pageCount={pageCount}
+                    pageRangeDisplayed={4}
+                    renderOnZeroPageCount={null}
+                    marginPagesDisplayed={2}
+                    onPageChange={handlePageClick}
+                    containerClassName="pagination justify-content-center"
+                    pageClassName="page-item"
+                    pageLinkClassName="page-link"
+                    previousClassName="page-item"
+                    previousLinkClassName="page-link"
+                    nextClassName="page-item"
+                    nextLinkClassName="page-link"
+                    activeClassName="active"
+                  />
+                </PaginateDiv>
+                <div style={{position:"absolute",right:"50px"}}>
+                <input
+                  placeholder="Limit"
+                  onChange={(e) => setLimit(e.target.value)}
+                  style={{
+                    height: "35px",
+                    borderRadius: "5px",
+                    border:"1px solid gray",
+                    fontFamily:"Times New Roman"
+                  }}
+                />
+                <button
+                  onClick={changeLimit}
+                  style={{
+                    height: "35px",
+                    marginLeft: "10px",
+                    borderRadius: "5px",
+                    background:"#00ca80",
+                    border:"none",
+                    fontFamily:"Times New Roman"
+                  }}
+                >
+                  Set Limit
+                </button>
+                </div>
+              </LastDiv>
           </MainDiv>
         </RightDiv>
         <Modal open={open} onClose={handleClose}>
@@ -324,6 +446,13 @@ function Dashboard() {
                 }}
                 style={{ width: "80%" }}
                 required
+                value={selectedUser?.username}
+                onChange={(e) => {
+                  setSelectedUser({
+                    ...selectedUser,
+                    username: e.target.value,
+                  });
+                }}
               />
               <TextField
                 id="outlined-basic"
@@ -335,7 +464,14 @@ function Dashboard() {
                   },
                 }}
                 style={{ width: "80%" }}
+                value={selectedUser?.accountnumber}
                 required
+                onChange={(e) => {
+                  setSelectedUser({
+                    ...selectedUser,
+                    accountnumber: e.target.value,
+                  });
+                }}
               />
               <TextField
                 id="outlined-basic"
@@ -348,6 +484,13 @@ function Dashboard() {
                 }}
                 style={{ width: "80%" }}
                 required
+                value={selectedUser?.bankname}
+                onChange={(e) => {
+                  setSelectedUser({
+                    ...selectedUser,
+                    bankname: e.target.value,
+                  });
+                }}
               />
               <TextField
                 id="outlined-basic"
@@ -360,6 +503,13 @@ function Dashboard() {
                 }}
                 style={{ width: "80%" }}
                 required
+                value={selectedUser?.address}
+                onChange={(e) => {
+                  setSelectedUser({
+                    ...selectedUser,
+                    address: e.target.value,
+                  });
+                }}
               />
               <TextField
                 id="outlined-basic"
@@ -371,7 +521,14 @@ function Dashboard() {
                   },
                 }}
                 style={{ width: "80%" }}
+                value={selectedUser?.city}
                 required
+                onChange={(e) => {
+                  setSelectedUser({
+                    ...selectedUser,
+                    city: e.target.value,
+                  });
+                }}
               />
               <TextField
                 id="outlined-basic"
@@ -383,6 +540,13 @@ function Dashboard() {
                   },
                 }}
                 style={{ width: "80%" }}
+                onChange={(e) => {
+                  setSelectedUser({
+                    ...selectedUser,
+                    country: e.target.value,
+                  });
+                }}
+                value={selectedUser?.country}
                 required
               />
               <TextField
@@ -394,7 +558,14 @@ function Dashboard() {
                     height: 12,
                   },
                 }}
+                value={selectedUser?.zip}
                 style={{ width: "80%" }}
+                onChange={(e) => {
+                  setSelectedUser({
+                    ...selectedUser,
+                    zip: e.target.value,
+                  });
+                }}
                 required
               />
               <Button
@@ -407,6 +578,16 @@ function Dashboard() {
                   fontSize: "16px",
                 }}
                 onClick={() => {
+                  axios
+                    .post("http://localhost:4000/user/update", {
+                      user: selectedUser,
+                    })
+                    .then((data) => {
+                      // console.log(data);
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
                   handleClose();
                   Swal.fire({
                     position: "top-end",
