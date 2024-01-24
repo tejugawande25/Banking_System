@@ -17,7 +17,6 @@ import { useRef } from "react";
 import ReactPaginate from "react-paginate";
 import { useNavigate } from "react-router-dom";
 
-
 const MainDashboard = styled(Box)`
 height:685px;
 min-width:99%;
@@ -38,8 +37,8 @@ const InsideDiv = styled(Box)`
   height: 86%;
   width: 94%;
   margin-top: 33px;
-  margin-bottom:10px;
-  margin-left:45px;
+  margin-bottom: 10px;
+  margin-left: 45px;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
   display: flex;
@@ -64,7 +63,7 @@ const AccountDetails = styled(Box)`
   margin-left: 30px;
   font-size: 24px;
   font-weight: 600;
-  font-family: Inter,sans-serif;
+  font-family: Inter, sans-serif;
   color: #404040;
 `;
 const LogoutButton = styled(Box)`
@@ -139,11 +138,11 @@ const MySearchIcon = styled(SearchIcon)`
   font-size: 28px;
   margin-left: 10px;
 `;
-const SearchButtonDiv = styled(Box)`
-  height: 80%;
-  width: 12%;
-  margin-top: 15px;
-`;
+// const SearchButtonDiv = styled(Box)`
+//   height: 80%;
+//   width: 12%;
+//   margin-top: 15px;
+// `;
 const MainBox = styled(Box)`
   position: absolute;
   top: 50%;
@@ -171,7 +170,6 @@ const UpdatingHeading = styled(Box)`
   width: 100%;
   display: flex;
   gap: 450px;
-  
 `;
 const Update = styled(Box)`
   height: 50%;
@@ -254,15 +252,15 @@ function Dashboard() {
       })
       .catch((err) => console.log(err));
   };
-  
-  const Navigate  = useNavigate();
-  const handleLogout = () =>{
-    alert("User logged Out!")
+
+  const Navigate = useNavigate();
+
+  const handleLogout = () => {
+    window.confirm("Are you sure !");
     Navigate("/");
-  }
+  };
 
   return (
-    
     <>
       <MainDashboard>
         <SideNavBar />
@@ -313,7 +311,7 @@ function Dashboard() {
                         }
                       });
 
-                     setFoundUser([findUser??{}]);
+                      setFoundUser([findUser ?? {}]);
                     }}
                     inputProps={{
                       style: {
@@ -322,7 +320,7 @@ function Dashboard() {
                     }}
                   ></InputTextField>
                 </SearchInnerDiv>
-                <SearchButtonDiv>
+                {/* <SearchButtonDiv>
                   <Button
                     variant="contained"
                     sx={{
@@ -336,7 +334,7 @@ function Dashboard() {
                   >
                     Search
                   </Button>
-                </SearchButtonDiv>
+                </SearchButtonDiv> */}
               </SearchDiv>
               <SubHeadingDiv>
                 <Div>Vender Name</Div>
@@ -379,37 +377,37 @@ function Dashboard() {
               )}
             </InsideDiv>
             <LastDiv>
-                <PaginateDiv>
-                  <ReactPaginate
-                    previousLabel="< previous"
-                    nextLabel="next >"
-                    breakLabel="..."
-                    breakClassName="page-item"
-                    breakLinkClassName="page-link"
-                    pageCount={pageCount}
-                    pageRangeDisplayed={4}
-                    renderOnZeroPageCount={null}
-                    marginPagesDisplayed={2}
-                    onPageChange={handlePageClick}
-                    containerClassName="pagination justify-content-center"
-                    pageClassName="page-item"
-                    pageLinkClassName="page-link"
-                    previousClassName="page-item"
-                    previousLinkClassName="page-link"
-                    nextClassName="page-item"
-                    nextLinkClassName="page-link"
-                    activeClassName="active"
-                  />
-                </PaginateDiv>
-                <div style={{position:"absolute",right:"50px"}}>
+              <PaginateDiv>
+                <ReactPaginate
+                  previousLabel="< previous"
+                  nextLabel="next >"
+                  breakLabel="..."
+                  breakClassName="page-item"
+                  breakLinkClassName="page-link"
+                  pageCount={pageCount}
+                  pageRangeDisplayed={4}
+                  renderOnZeroPageCount={null}
+                  marginPagesDisplayed={2}
+                  onPageChange={handlePageClick}
+                  containerClassName="pagination justify-content-center"
+                  pageClassName="page-item"
+                  pageLinkClassName="page-link"
+                  previousClassName="page-item"
+                  previousLinkClassName="page-link"
+                  nextClassName="page-item"
+                  nextLinkClassName="page-link"
+                  activeClassName="active"
+                />
+              </PaginateDiv>
+              <div style={{ position: "absolute", right: "50px" }}>
                 <input
                   placeholder="Limit"
                   onChange={(e) => setLimit(e.target.value)}
                   style={{
                     height: "35px",
                     borderRadius: "5px",
-                    border:"1px solid gray",
-                    fontFamily:"Inter,sans-serif"
+                    border: "1px solid gray",
+                    fontFamily: "Inter,sans-serif",
                   }}
                 />
                 <button
@@ -418,15 +416,15 @@ function Dashboard() {
                     height: "35px",
                     marginLeft: "10px",
                     borderRadius: "5px",
-                    background:"#00ca80",
-                    border:"none",
-                    fontFamily:"Inter,sans-serif"
+                    background: "#00ca80",
+                    border: "none",
+                    fontFamily: "Inter,sans-serif",
                   }}
                 >
                   Set Limit
                 </button>
-                </div>
-              </LastDiv>
+              </div>
+            </LastDiv>
           </MainDiv>
         </RightDiv>
         <Modal open={open} onClose={handleClose}>
@@ -434,7 +432,9 @@ function Dashboard() {
             <MainBox>
               <UpdatingHeadingDiv>
                 <UpdatingHeading>
-                  <Update style={{fontFamily:'Inter,sans-serif'}}>Update Account</Update>
+                  <Update style={{ fontFamily: "Inter,sans-serif" }}>
+                    Update Account
+                  </Update>
                 </UpdatingHeading>
               </UpdatingHeadingDiv>
               <TextField
@@ -446,7 +446,7 @@ function Dashboard() {
                     height: 12,
                   },
                 }}
-                style={{ width: "80%",fontFamily:'Inter,sans-serif'}}
+                style={{ width: "80%", fontFamily: "Inter,sans-serif" }}
                 required
                 value={selectedUser?.username}
                 onChange={(e) => {
@@ -576,7 +576,7 @@ function Dashboard() {
                   width: "50%",
                   background: "#00ca80",
                   color: "black",
-                  fontFamily:'Inter,sans-serif',
+                  fontFamily: "Inter,sans-serif",
                   fontSize: "16px",
                 }}
                 onClick={() => {
