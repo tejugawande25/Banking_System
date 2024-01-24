@@ -64,7 +64,7 @@ const AccountDetails = styled(Box)`
   margin-left: 30px;
   font-size: 24px;
   font-weight: 600;
-  font-family: Inter sans-serif;
+  font-family: Inter,sans-serif;
   color: #404040;
 `;
 const LogoutButton = styled(Box)`
@@ -171,6 +171,7 @@ const UpdatingHeading = styled(Box)`
   width: 100%;
   display: flex;
   gap: 450px;
+  
 `;
 const Update = styled(Box)`
   height: 50%;
@@ -256,7 +257,8 @@ function Dashboard() {
   
   const Navigate  = useNavigate();
   const handleLogout = () =>{
-    Navigate("/login");
+    alert("User logged Out!")
+    Navigate("/");
   }
 
   return (
@@ -278,7 +280,7 @@ function Dashboard() {
                         width: "100%",
                         background: "#00ca80",
                         color: "black",
-                        fontFamily: "Times New Roman",
+                        fontFamily: "Inter,sans-serif",
                         fontSize: "16px",
                       }}
                       onClick={handleLogout}
@@ -328,8 +330,8 @@ function Dashboard() {
                       height: "43px",
                       background: "#00ca80",
                       color: "black",
-                      fontFamily: "Times New Roman",
-                      fontSize: "18px",
+                      fontFamily: "Inter,sans-serif",
+                      fontSize: "17px",
                     }}
                   >
                     Search
@@ -407,7 +409,7 @@ function Dashboard() {
                     height: "35px",
                     borderRadius: "5px",
                     border:"1px solid gray",
-                    fontFamily:"Times New Roman"
+                    fontFamily:"Inter,sans-serif"
                   }}
                 />
                 <button
@@ -418,7 +420,7 @@ function Dashboard() {
                     borderRadius: "5px",
                     background:"#00ca80",
                     border:"none",
-                    fontFamily:"Times New Roman"
+                    fontFamily:"Inter,sans-serif"
                   }}
                 >
                   Set Limit
@@ -432,7 +434,7 @@ function Dashboard() {
             <MainBox>
               <UpdatingHeadingDiv>
                 <UpdatingHeading>
-                  <Update>Update Account</Update>
+                  <Update style={{fontFamily:'Inter,sans-serif'}}>Update Account</Update>
                 </UpdatingHeading>
               </UpdatingHeadingDiv>
               <TextField
@@ -444,7 +446,7 @@ function Dashboard() {
                     height: 12,
                   },
                 }}
-                style={{ width: "80%" }}
+                style={{ width: "80%",fontFamily:'Inter,sans-serif'}}
                 required
                 value={selectedUser?.username}
                 onChange={(e) => {
@@ -574,7 +576,7 @@ function Dashboard() {
                   width: "50%",
                   background: "#00ca80",
                   color: "black",
-                  fontFamily: "Times New Roman",
+                  fontFamily:'Inter,sans-serif',
                   fontSize: "16px",
                 }}
                 onClick={() => {

@@ -138,7 +138,7 @@ function Write() {
           <ShowRecords>
             <UpperHeadingDiv>
               <UpperHeading>
-                <CreateAccount>Create Account</CreateAccount>
+                <CreateAccount style={{fontFamily:'Inter,sans-serif'}}>Create Account</CreateAccount>
               </UpperHeading>
             </UpperHeadingDiv>
             <DetailsDiv>
@@ -151,7 +151,7 @@ function Write() {
                     height: 12,
                   },
                 }}
-                style={{ width: "80%", marginTop: "15px" }}
+                style={{ width: "80%", marginTop: "15px",fontFamily:"Inter,sans-serif"}}
                 required
                 type="text"
                 value={user.username}
@@ -261,7 +261,7 @@ function Write() {
                   width: "40%",
                   background: "#00ca80",
                   color: "black",
-                  fontFamily: "Times New Roman",
+                  fontFamily: "Inter,sans-serif",
                   fontSize: "16px",
                 }}
                

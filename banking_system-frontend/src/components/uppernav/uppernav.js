@@ -133,7 +133,7 @@ export default function PrimarySearchAppBar() {
           style={{
             fontSize: "26px",
             fontWeight: "600",
-            fontFamily: "Times New Roman",
+            fontFamily: "Inter,sans-serif",
             marginLeft: "20px",
           }}
         >
