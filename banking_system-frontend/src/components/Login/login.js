@@ -60,7 +60,7 @@ function Login() {
   return <>
    <MainConainer>
     <LoginContainer>
-    <LeftDiv style={{width:"50%",background:"url(https://i.pinimg.com/564x/a1/27/a1/a127a179efaf02e571b2a86ed79d16a9.jpg)",objectFit:"cover",
+    <LeftDiv style={{width:"50%",xbackground:"url(https://i.pinimg.com/564x/a1/27/a1/a127a179efaf02e571b2a86ed79d16a9.jpg)",objectFit:"cover",
   }}>
         
         </LeftDiv>
